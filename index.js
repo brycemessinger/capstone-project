@@ -1,4 +1,33 @@
 // setting everything up with naming and styling
+let fines = 0
+let jailtime = 0
+let firsttimetheft = 0
+let firsttimevandalism = 0
+let firsttimeanimalabuse = 0
+let firsttimehomocide = 0
+
+// legal advice triggers
+let theftText = () => {
+    if (firsttimetheft === 1){
+        confirm("Ow! Its me, Mark Question! Theft is illegal in every state including the Mushroom kingdom. While scope of the punishment and penalties depends on the scope of the crime (first, second, and third degrees) you just stole a gold coin well over a kilogram in weight, meaning you get a $20,000 fine and up to 10 years in jail! You robbed me of my money, now the system will rob you of your freedom.")
+    }
+}
+let vandalismText = () => { 
+    if (firsttimevandalism === 1) {
+        confirm("Watch it buddy! Its me, Brick Block Jacque! Destruction of public property and infrastructure can be charged either as a misdemeanor or a felony. Misdemeanor charges are punishable by up to 180 days jailtime and $1000, and felony charges are punishable by up to 10 years in prison and $5,000 + restitution. In this case, you will be charged with a misdemeanor. May you step on legos each step for the rest of your life.")
+    }
+}
+let animalAbuseText = () => {
+    if (firsttimeanimalabuse === 1) {
+        window.confirm("Ouch! Its me, Kooper! Animal cruelty penalties differ on the state level. In States such as Vermont and California, the penalties are indescriminate about whether you overworked/neglected an animal or whether you maimed or killed an animal. Fines are up to $20,000 and 1 year of jail time. It's unfortunate for you the Mushroom Kingdom is in Vermont")
+    }
+}
+let homocideText = () => {
+    if (firsttimehomocide === 1) {
+        window.confirm("Oof! Its me, toad! What do you mean 'just toad'? Its ghost toad to you now. Homocide is among the most serious of crimes. In States like Utah and Tennessee, second degree murder can land you in prison for 5-40 years, First Degree Murder without aggravation will land you life in prison. Murder in the first degree with aggravation may land you a death penalty! Even when you aren't below the streets cleaning pipes, your life is still a sewer, bub.")
+    }
+}
+// framework for the grid system environment
 class GridSystem {
 	constructor(matrix, playerX, playerY) {
 		this.matrix = matrix;
@@ -15,35 +44,86 @@ class GridSystem {
         this.koopa = {color: "#81D510"}
         this.brickBlock = {color: "#3C1518"}
         this.pipe = {color: "green"}
-        this.coin = {color: "gold"}
+        // this.coin = {color: "gold"} 
         this.toad = {color: "white"}
 
 		this.matrix[playerY][playerX] = 2;
 
 		document.addEventListener("keydown", this.#movePlayer);
 	}
-// lines 26 - 72 for player movement
+// player movement
 	#isValidMove(x, y) {
 		if (this.matrix[this.player.y + y][this.player.x + x] === 0) {
 			return true;
 		}else if (this.matrix[this.player.y + y][this.player.x + x] === 4){
             console.log("? block hit!")
-		// }else if (this.matrix[this.player.y + y][this.player.x + x] === 8){
-        //     console.log("brick block hit!")
-        //     this.matrix[this.player.y + y][this.player.x + x] = 0
-		}
+            fines += 20000
+            jailtime += 10
+            theftText(firsttimetheft += 1)
+            console.log(fines, jailtime, firsttimetheft)
+            this.matrix[this.player.y + y][this.player.x + x] = 12
+		}else if (this.matrix[this.player.y + y][this.player.x + x] === 8){
+            this.render()
+            console.log("brick block hit!")
+            fines += 1500
+            jailtime += 1
+            vandalismText(firsttimevandalism += 1)
+            console.log(fines, firsttimevandalism)
+            this.matrix[this.player.y + y][this.player.x + x] = 0
+		}else if(this.matrix[this.player.y + y][this.player.x + x] === 6){
+            console.log("Koopa Stomped!")
+            fines += 20000
+            jailtime += 1
+            animalAbuseText(firsttimeanimalabuse += 1)
+            console.log(fines, jailtime)
+            this.matrix[this.player.y + y][this.player.x + x] = 0
+        }else if (this.matrix[this.player.y + y][this.player.x + x] === 11){
+            console.log("toad slain!")
+            jailtime += 40
+            homocideText(firsttimehomocide += 1)
+            console.log(fines, jailtime)
+            this.matrix[this.player.y + y][this.player.x + x] = 0
+        }else if (this.matrix[this.player.y + y][this.player.x + x] === 25){
+            console.log("bad ending chosen")
+            confirm(`Stop right there! Running from the law is never a good idea. Because you ran, additional charges against you have been filed and no plea deal has been offered. You have accumulated $ ${fines} in fines and ${jailtime} years in prison`)
+            
+        }else if (this.matrix[this.player.y + y][this.player.x + x] === 26) {
+            fines *= .8
+            jailtime *= .8
+            console.log("less bad ending")
+            confirm(`You have decided to enter into a plea deal. Because of your ability to refrain from any further unruly behavior in the courthouse, the judge has also been slightly more lenient than he would have otherwise been. You have accumulated $ ${fines} in fines and ${jailtime} years in prison.`)
+        }
         if (this.matrix[this.player.y + y][this.player.x + x] === 15){
             console.log("change screen!")
-            const gridSystem2 = new GridSystem(gridMatrix2, 2, 11);
+            const gridSystem2 = new GridSystem(gridMatrix2, 0, 11);
+            gridSystem2.render()
+            this.matrix[this.player.y + y][this.player.x + x] = 3
+            this.#updateMatrix(this.player.y - 1, this.player.x + 1,  3)
+            this.#updateMatrix(this.player.y - 1, this.player.x,  3)
+            this.#updateMatrix(this.player.y + 1, this.player.x - 1,  3)
+            this.#updateMatrix(this.player.y + 1, this.player.x,  3)
+            this.#updateMatrix(this.player.y, this.player.x - 1,  3)
+
         }
         if (this.matrix[this.player.y + y][this.player.x + x] === 16){
             console.log("change screen!")
-            const gridSystem3 = new GridSystem(gridMatrix3, 2, 11);
+            const gridSystem3 = new GridSystem(gridMatrix3, 0, 11);
+            gridSystem3.render()      
+            this.matrix[this.player.y + y][this.player.x + x] = 3
+            this.#updateMatrix(this.player.y - 1, this.player.x + 1,  3)
+            this.#updateMatrix(this.player.y - 1, this.player.x,  3)
+            this.#updateMatrix(this.player.y + 1, this.player.x - 1,  3)
+            this.#updateMatrix(this.player.y + 1, this.player.x,  3)
+            this.#updateMatrix(this.player.y, this.player.x - 1,  3)
 ;
         }else{
 		return false;
         }
 	}
+
+    // #levelUnloader() {
+    //     this.matrix[]
+    // }
 
 	#updateMatrix(y, x, val) {
 		this.matrix[y][x] = val;
@@ -58,6 +138,7 @@ class GridSystem {
 			 this.#updateMatrix(this.player.y, this.player.x - 1, 2)
 			 this.player.x --
 			 this.render()
+             
 		 }
 		} else if (keyCode === 68) {
             // right key
@@ -65,7 +146,7 @@ class GridSystem {
 				this.#updateMatrix(this.player.y, this.player.x, 0)
  			 	this.#updateMatrix(this.player.y, this.player.x + 1, 2)
 				this.player.x ++
-                this.#updateMatrix(2,11,0)
+                // this.#updateMatrix(2,11,0)
 				this.render()
 			// }else if (this.matrix[this.player.x + x] === 15){
             //     console.log("right arrow")
@@ -159,6 +240,12 @@ class GridSystem {
                     color = this.toad.color
                 } else if (cellVal === 16) {
                     color = "#8b8ff2"
+                } else if (cellVal === 12) {
+                    color = "#DCEAB2"
+                }else if (cellVal === 25) {
+                    color = this.pipe.color
+                }else if (cellVal === 26) {
+                    color = this.pipe.color
                 }
 
 
@@ -196,10 +283,10 @@ const gridMatrix = [
     [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
     [3,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
     [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
+    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,15],
     [3,0,0,0,0,0,0,8,4,8,4,8,0,0,0,9,9,9,9,0,0,0,0,0,0,0,0,0,0,0,0,15],
     [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,15],
+    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,0,0,0,6,0,0,0,0,0,0,11,0,0,15],
     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,3,3,3,3,3,3],
     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,3,3,3,3,3,3],
 ];
@@ -210,9 +297,9 @@ const gridMatrix2 = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,8,8,8,0,0,0,0,0,16],
     [0,0,0,0,0,0,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
     [0,0,0,0,0,0,9,9,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
     [0,0,0,0,0,0,9,9,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16],
@@ -222,17 +309,17 @@ const gridMatrix2 = [
 ];
 const gridMatrix3 = [
     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,8,8,8,0,0,0,0,0,0,0,0,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,9,9,9,9,0,9,9,9,9,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,0,0,0,9,9,0,0,0,9,9,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,0,0,0,9,9,0,0,0,9,9,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,8,0,0,0,0,0,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,0,0,0,0,0,0,8,8,8,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,8,8,8,0,0,0,0,0,0,0,0,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,3],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,9,25,25,9,0,9,26,26,9,3],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,0,0,0,9,9,0,0,0,9,9,0,3],
+    [0,0,0,0,0,0,0,0,0,11,0,0,6,0,5,5,5,5,5,5,0,0,0,9,9,0,0,0,9,9,0,3],
     [3,3,3,3,3,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
     [3,3,3,3,3,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
 ];
@@ -242,3 +329,4 @@ const gridSystem = new GridSystem(gridMatrix, 2, 11,);
 
 
 gridSystem.render();
+// 31 across
