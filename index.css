@@ -1,0 +1,16 @@
+@font-face{
+    font-family:SuperMarioBros-ov7dimport;
+    src:url("SuperMarioBros-ov7d.ttf");
+}
+
+body{
+    background-image: url("mario-background.jpg");
+    font-family:SuperMarioBros-ov7dimport;
+    font-size: 40px;
+}
+
+.div-one{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+};

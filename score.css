@@ -1,0 +1,29 @@
+@font-face{
+    font-family:PressStart2P-Regularimport;
+    src:url("PressStart2P-Regular.ttf");
+}
+
+body{
+    background-color: #294AA0;
+    font-family:PressStart2P-Regularimport;
+    color: white;
+}
+
+.div-one{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.div-two{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.score-box{
+    background-color: #000838;
+    margin-top: 60px;
+    height: 300px;
+    width: 500px;
+}

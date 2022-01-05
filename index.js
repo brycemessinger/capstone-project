@@ -6,6 +6,15 @@ let firsttimevandalism = 0
 let firsttimeanimalabuse = 0
 let firsttimehomocide = 0
 
+// sound effects
+var brickBlockAudio = new Audio('smb_breakblock.wav');
+var getCoinAudio = new Audio('smb_coin.wav');
+var stompAudio = new Audio('smb_stomp.wav');
+var pipeAudio = new Audio('smb_pipe.wav');
+
+// audio.play()
+
+
 // legal advice triggers
 let theftText = () => {
     if (firsttimetheft === 1){
@@ -44,8 +53,18 @@ class GridSystem {
         this.koopa = {color: "#81D510"}
         this.brickBlock = {color: "#3C1518"}
         this.pipe = {color: "green"}
-        // this.coin = {color: "gold"} 
         this.toad = {color: "white"}
+       
+        
+        const tileset = null, tilesetURL = "tileset.png", tilesetLoaded = false;
+        this.sprites = {}
+        const tileTypes = {
+            0 : { colour:"#685b48", sprite:[{x:0,y:0,w:40,h:40}]	},
+            1 : { colour:"#5aa457", sprite:[{x:40,y:0,w:40,h:40}]	},
+            2 : { colour:"#e8bd7a", sprite:[{x:80,y:0,w:40,h:40}]	},
+            3 : { colour:"#286625", sprite:[{x:120,y:0,w:40,h:40}]	},
+            4 : { colour:"#678fd9", sprite:[{x:160,y:0,w:40,h:40}]	}
+        };
 
 		this.matrix[playerY][playerX] = 2;
 
@@ -60,6 +79,7 @@ class GridSystem {
             fines += 20000
             jailtime += 10
             theftText(firsttimetheft += 1)
+            getCoinAudio.play()
             console.log(fines, jailtime, firsttimetheft)
             this.matrix[this.player.y + y][this.player.x + x] = 12
 		}else if (this.matrix[this.player.y + y][this.player.x + x] === 8){
@@ -67,6 +87,7 @@ class GridSystem {
             console.log("brick block hit!")
             fines += 1500
             jailtime += 1
+            brickBlockAudio.play()
             vandalismText(firsttimevandalism += 1)
             console.log(fines, firsttimevandalism)
             this.matrix[this.player.y + y][this.player.x + x] = 0
@@ -74,24 +95,31 @@ class GridSystem {
             console.log("Koopa Stomped!")
             fines += 20000
             jailtime += 1
+            stompAudio.play()
             animalAbuseText(firsttimeanimalabuse += 1)
             console.log(fines, jailtime)
             this.matrix[this.player.y + y][this.player.x + x] = 0
         }else if (this.matrix[this.player.y + y][this.player.x + x] === 11){
             console.log("toad slain!")
             jailtime += 40
+            stompAudio.play()
             homocideText(firsttimehomocide += 1)
             console.log(fines, jailtime)
             this.matrix[this.player.y + y][this.player.x + x] = 0
         }else if (this.matrix[this.player.y + y][this.player.x + x] === 25){
+            pipeAudio.play()
             console.log("bad ending chosen")
             confirm(`Stop right there! Running from the law is never a good idea. Because you ran, additional charges against you have been filed and no plea deal has been offered. You have accumulated $ ${fines} in fines and ${jailtime} years in prison`)
+            location.href = "score-page.html";
             
         }else if (this.matrix[this.player.y + y][this.player.x + x] === 26) {
             fines *= .8
             jailtime *= .8
+            pipeAudio.play()
             console.log("less bad ending")
             confirm(`You have decided to enter into a plea deal. Because of your ability to refrain from any further unruly behavior in the courthouse, the judge has also been slightly more lenient than he would have otherwise been. You have accumulated $ ${fines} in fines and ${jailtime} years in prison.`)
+            location.href = "score-page.html";
+
         }
         if (this.matrix[this.player.y + y][this.player.x + x] === 15){
             console.log("change screen!")
@@ -121,10 +149,6 @@ class GridSystem {
         }
 	}
 
-    // #levelUnloader() {
-    //     this.matrix[]
-    // }
-
 	#updateMatrix(y, x, val) {
 		this.matrix[y][x] = val;
 	}
@@ -146,11 +170,8 @@ class GridSystem {
 				this.#updateMatrix(this.player.y, this.player.x, 0)
  			 	this.#updateMatrix(this.player.y, this.player.x + 1, 2)
 				this.player.x ++
-                // this.#updateMatrix(2,11,0)
 				this.render()
-			// }else if (this.matrix[this.player.x + x] === 15){
-            //     console.log("right arrow")
-            //     // gridSystem2.render()
+		
                 
             }
 		} else if (keyCode === 87) {
@@ -263,15 +284,8 @@ class GridSystem {
     }
 }
 
-// const tileset = null, tilesetURL = "tileset.png", tilesetLoaded = false;
 
-// var tileTypes = {
-// 	0 : { colour:"#685b48", floor:floorTypes.solid, sprite:[{x:0,y:0,w:40,h:40}]	},
-// 	1 : { colour:"#5aa457", floor:floorTypes.path,	sprite:[{x:40,y:0,w:40,h:40}]	},
-// 	2 : { colour:"#e8bd7a", floor:floorTypes.path,	sprite:[{x:80,y:0,w:40,h:40}]	},
-// 	3 : { colour:"#286625", floor:floorTypes.solid,	sprite:[{x:120,y:0,w:40,h:40}]	},
-// 	4 : { colour:"#678fd9", floor:floorTypes.water,	sprite:[{x:160,y:0,w:40,h:40}]	}
-// };
+
 
 const gridMatrix = [
     // first screen
