@@ -1,3 +1,17 @@
+// const express = require('express')
+// const path = require('path')
+// const app = express()
+
+// app.use(express.json())
+
+// app.get('/',function(req,res) {
+//     res.sendFile(path.join(__dirname, '../index.html'));
+//   });
+
+// app.listen(4050, () => console.log('Server is running on port 4050'))
+
+
+
 // setting everything up with naming and styling
 let fines = 0
 let jailtime = 0
