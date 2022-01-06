@@ -1,15 +1,18 @@
-// const express = require('express')
-// const path = require('path')
-// const app = express()
+const baseURL = 'http://localhost:4050/api/scores'
+// const getScore = () => axios.get(baseURL).then
+const postScore = async (body) => await axios.post(baseURL, body).then(res => {
+    console.log(res.data)
+})
 
-// app.use(express.json())
 
-// app.get('/',function(req,res) {
-//     res.sendFile(path.join(__dirname, '../index.html'));
-//   });
-
-// app.listen(4050, () => console.log('Server is running on port 4050'))
-
+function scoreHandler() {
+    const body = {
+        fines,
+        jailtime
+    }
+    console.log("score handler")
+    postScore(body)
+}
 
 
 // setting everything up with naming and styling
@@ -123,8 +126,10 @@ class GridSystem {
         }else if (this.matrix[this.player.y + y][this.player.x + x] === 25){
             pipeAudio.play()
             console.log("bad ending chosen")
+            scoreHandler()
             confirm(`Stop right there! Running from the law is never a good idea. Because you ran, additional charges against you have been filed and no plea deal has been offered. You have accumulated $ ${fines} in fines and ${jailtime} years in prison`)
             location.href = "score-page.html";
+
             
         }else if (this.matrix[this.player.y + y][this.player.x + x] === 26) {
             fines *= .8
