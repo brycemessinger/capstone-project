@@ -5,9 +5,10 @@ module.exports = {
         res.status(200).send(data)
     },
     postScore: (req,res) => {
-        const {jailTime, fines} = req.body
+        console.log(req.body)
+        const {jailtime, fines} = req.body
         let newScore = {
-            jailTime: jailTime,
+            jailtime: jailtime,
             fines: fines
         }
         data.push(newScore);
